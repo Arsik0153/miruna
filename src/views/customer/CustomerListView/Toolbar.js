@@ -4,14 +4,9 @@ import clsx from 'clsx';
 import {
   Box,
   Button,
-  Card,
-  CardContent,
-  TextField,
-  InputAdornment,
-  SvgIcon,
   makeStyles
 } from '@material-ui/core';
-import { Search as SearchIcon } from 'react-feather';
+// import { Search as SearchIcon } from 'react-feather';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -82,4 +77,4 @@ Toolbar.propTypes = {
   className: PropTypes.string
 };
 
-export default Toolbar;
+// export default Toolbar;
