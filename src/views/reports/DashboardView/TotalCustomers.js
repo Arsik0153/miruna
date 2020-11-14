@@ -39,7 +39,6 @@ const TotalCustomers = ({ className, ...rest }) => {
   useEffect(() => {
     axios.get('https://miruna.herokuapp.com/api/bookings/total')
       .then(res => {
-        console.log(res.data);
         setTotalBookings(res.data.total_bookings);
       })
       .catch(err => {

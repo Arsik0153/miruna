@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Doughnut } from 'react-chartjs-2';
@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import LaptopMacIcon from '@material-ui/icons/LaptopMac';
 import PhoneIcon from '@material-ui/icons/Phone';
-import TabletIcon from '@material-ui/icons/Tablet';
+import axios from 'axios';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -26,14 +26,23 @@ const useStyles = makeStyles(() => ({
 const TrafficByDevice = ({ className, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
+  const [mobile, setMobile] = useState();
+  const [desktop, setDesktop] = useState();
+
+  useEffect(() => {
+    axios.get('https://miruna.herokuapp.com/api/stats')
+      .then(res => {
+        setMobile(res.data.rows[0].query_count);
+        setDesktop(res.data.rows[1].query_count);
+      })
+  },[]);
 
   const data = {
     datasets: [
       {
-        data: [63, 15, 22],
+        data: [desktop, mobile],
         backgroundColor: [
           theme.palette.primary.main,
-          colors.red[600],
           colors.orange[600]
         ],
         borderWidth: 8,
@@ -41,7 +50,7 @@ const TrafficByDevice = ({ className, ...rest }) => {
         hoverBorderColor: colors.common.white
       }
     ],
-    labels: ['Desktop', 'Tablet', 'Mobile']
+    labels: ['Desktop', 'Mobile']
   };
 
   const options = {
@@ -69,19 +78,13 @@ const TrafficByDevice = ({ className, ...rest }) => {
   const devices = [
     {
       title: 'Desktop',
-      value: 63,
+      value: Math.round((desktop / (desktop + mobile)) * 100),
       icon: LaptopMacIcon,
       color: colors.indigo[500]
     },
     {
-      title: 'Tablet',
-      value: 15,
-      icon: TabletIcon,
-      color: colors.red[600]
-    },
-    {
       title: 'Mobile',
-      value: 23,
+      value: Math.round((mobile / (desktop + mobile)) * 100),
       icon: PhoneIcon,
       color: colors.orange[600]
     }
