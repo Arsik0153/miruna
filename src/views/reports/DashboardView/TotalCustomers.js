@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
   Avatar,
-  Box,
   Card,
   CardContent,
   Grid,
@@ -11,8 +10,9 @@ import {
   colors,
   makeStyles
 } from '@material-ui/core';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
+import axios from 'axios';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,6 +34,19 @@ const useStyles = makeStyles((theme) => ({
 
 const TotalCustomers = ({ className, ...rest }) => {
   const classes = useStyles();
+  const [ totalBookings, setTotalBookings ] = useState();
+
+  useEffect(() => {
+    axios.get('https://miruna.herokuapp.com/api/bookings/total')
+      .then(res => {
+        console.log(res.data);
+        setTotalBookings(res.data.total_bookings);
+      })
+      .catch(err => {
+        console.log(err);
+        setTotalBookings('Error');
+      });
+  }, []);
 
   return (
     <Card
@@ -52,13 +65,15 @@ const TotalCustomers = ({ className, ...rest }) => {
               gutterBottom
               variant="h6"
             >
-              TOTAL CUSTOMERS
+              TOTAL BOOKINGS
             </Typography>
             <Typography
               color="textPrimary"
               variant="h3"
             >
-              1,600
+              {totalBookings ? totalBookings : (
+                <CircularProgress />
+              )}
             </Typography>
           </Grid>
           <Grid item>
@@ -67,25 +82,6 @@ const TotalCustomers = ({ className, ...rest }) => {
             </Avatar>
           </Grid>
         </Grid>
-        <Box
-          mt={2}
-          display="flex"
-          alignItems="center"
-        >
-          <ArrowUpwardIcon className={classes.differenceIcon} />
-          <Typography
-            className={classes.differenceValue}
-            variant="body2"
-          >
-            16%
-          </Typography>
-          <Typography
-            color="textSecondary"
-            variant="caption"
-          >
-            Since last month
-          </Typography>
-        </Box>
       </CardContent>
     </Card>
   );
