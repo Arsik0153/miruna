@@ -35,6 +35,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Results = ({ className, orders, fetchOrders, ...rest }) => {
+  let token = localStorage.getItem('token');
+
   const classes = useStyles();
   const [ limit, setLimit ] = useState(10);
   const [ page, setPage ] = useState(0);
@@ -50,6 +52,10 @@ const Results = ({ className, orders, fetchOrders, ...rest }) => {
   const handleSelectChange = (e, id) => {
     axios.put(`https://miruna.herokuapp.com/api/bookings/${id}`, {
       status: e.target.value
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     })
       .then(() => {
         fetchOrders();
@@ -60,7 +66,12 @@ const Results = ({ className, orders, fetchOrders, ...rest }) => {
   };
 
   const handleDelete = () => {
-    axios.delete(`https://miruna.herokuapp.com/api/bookings/${deletingId}`)
+    axios.delete(`https://miruna.herokuapp.com/api/bookings/${deletingId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
       .then(() => {
         fetchOrders();
       })
@@ -71,7 +82,7 @@ const Results = ({ className, orders, fetchOrders, ...rest }) => {
   };
 
   const [ open, setOpen ] = useState(false);
-  const [ deletingId, setDeletingId] = useState(0);
+  const [ deletingId, setDeletingId ] = useState(0);
 
   const handleClickOpen = (id) => {
     setOpen(true);
@@ -94,7 +105,7 @@ const Results = ({ className, orders, fetchOrders, ...rest }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Deleting row"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{'Deleting row'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             Are you sure to delete this row?
@@ -138,7 +149,7 @@ const Results = ({ className, orders, fetchOrders, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.slice(0, limit).map((order) => (
+              {orders.slice(page, limit).map((order) => (
                 <TableRow
                   hover
                   key={order.id}

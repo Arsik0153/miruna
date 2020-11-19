@@ -3,16 +3,15 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
   Avatar,
-  Box,
   Card,
   CardContent,
   Grid,
-  LinearProgress,
   Typography,
   makeStyles,
   colors
 } from '@material-ui/core';
 import InsertChartIcon from '@material-ui/icons/InsertChartOutlined';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -25,7 +24,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const TasksProgress = ({ className, ...rest }) => {
+const TasksProgress = ({ className, visits, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -45,13 +44,15 @@ const TasksProgress = ({ className, ...rest }) => {
               gutterBottom
               variant="h6"
             >
-              TASKS PROGRESS
+              TOTAL VISITS
             </Typography>
             <Typography
               color="textPrimary"
               variant="h3"
             >
-              75.5%
+              {visits ? (visits.rows[0].query_count + visits.rows[1].query_count) : (
+                <CircularProgress />
+              )}
             </Typography>
           </Grid>
           <Grid item>
@@ -60,12 +61,6 @@ const TasksProgress = ({ className, ...rest }) => {
             </Avatar>
           </Grid>
         </Grid>
-        <Box mt={3}>
-          <LinearProgress
-            value={75.5}
-            variant="determinate"
-          />
-        </Box>
       </CardContent>
     </Card>
   );

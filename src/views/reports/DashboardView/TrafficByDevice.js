@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Doughnut } from 'react-chartjs-2';
@@ -15,7 +15,6 @@ import {
 } from '@material-ui/core';
 import LaptopMacIcon from '@material-ui/icons/LaptopMac';
 import PhoneIcon from '@material-ui/icons/Phone';
-import axios from 'axios';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -23,19 +22,11 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const TrafficByDevice = ({ className, ...rest }) => {
+const TrafficByDevice = ({ className, visits, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
-  const [mobile, setMobile] = useState();
-  const [desktop, setDesktop] = useState();
-
-  useEffect(() => {
-    axios.get('https://miruna.herokuapp.com/api/stats')
-      .then(res => {
-        setMobile(res.data.rows[0].query_count);
-        setDesktop(res.data.rows[1].query_count);
-      })
-  },[]);
+  const [mobile] = useState(visits.rows[0].query_count);
+  const [desktop] = useState(visits.rows[1].query_count);
 
   const data = {
     datasets: [

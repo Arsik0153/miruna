@@ -25,7 +25,12 @@ const CustomerListView = () => {
   const [ error, setError ] = useState();
 
   const fetchOrders = () => {
-    axios.get('https://miruna.herokuapp.com/api/bookings/page/1')
+    let token = localStorage.getItem('token');
+    axios.get('https://miruna.herokuapp.com/api/bookings/page/1', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then((res) => {
         setOrders(res.data.rows);
       })

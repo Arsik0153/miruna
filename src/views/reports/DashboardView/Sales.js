@@ -1,20 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Bar } from 'react-chartjs-2';
 import {
   Box,
-  Button,
   Card,
   CardContent,
   CardHeader,
   Divider,
   useTheme,
   makeStyles,
-  colors
 } from '@material-ui/core';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -24,18 +21,20 @@ const Sales = ({ className, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!localStorage.getItem('token'))
+      navigate('/');
+  }, [navigate]);
+
   const data = {
     datasets: [
       {
         backgroundColor: theme.palette.primary.main,
         data: [18, 5, 19, 27, 29, 19, 20],
-        label: 'This year'
+        label: 'Orders'
       },
-      {
-        backgroundColor: colors.grey[200],
-        data: [11, 20, 12, 29, 30, 25, 13],
-        label: 'Last year'
-      }
     ],
     labels: ['1 Aug', '2 Aug', '3 Aug', '4 Aug', '5 Aug', '6 Aug']
   };
@@ -101,16 +100,7 @@ const Sales = ({ className, ...rest }) => {
       {...rest}
     >
       <CardHeader
-        action={(
-          <Button
-            endIcon={<ArrowDropDownIcon />}
-            size="small"
-            variant="text"
-          >
-            Last 7 days
-          </Button>
-        )}
-        title="Latest Sales"
+        title="Order statistics"
       />
       <Divider />
       <CardContent>
@@ -124,21 +114,6 @@ const Sales = ({ className, ...rest }) => {
           />
         </Box>
       </CardContent>
-      <Divider />
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-        p={2}
-      >
-        <Button
-          color="primary"
-          endIcon={<ArrowRightIcon />}
-          size="small"
-          variant="text"
-        >
-          Overview
-        </Button>
-      </Box>
     </Card>
   );
 };

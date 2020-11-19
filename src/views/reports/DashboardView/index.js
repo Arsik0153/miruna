@@ -1,17 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Container,
   Grid,
   makeStyles
 } from '@material-ui/core';
 import Page from 'src/components/Page';
-import Budget from './Budget';
 import LatestOrders from './LatestOrders';
 import Sales from './Sales';
 import TasksProgress from './TasksProgress';
 import TotalCustomers from './TotalCustomers';
-import TotalProfit from './TotalProfit';
 import TrafficByDevice from './TrafficByDevice';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,6 +23,14 @@ const useStyles = makeStyles((theme) => ({
 
 const Dashboard = () => {
   const classes = useStyles();
+  const [visits, setVisits] = useState();
+
+  useEffect(() => {
+    axios.get('https://miruna.herokuapp.com/api/stats')
+      .then(res => {
+        setVisits(res.data);
+      })
+  },[]);
 
   return (
     <Page
@@ -37,16 +44,7 @@ const Dashboard = () => {
         >
           <Grid
             item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <Budget />
-          </Grid>
-          <Grid
-            item
-            lg={3}
+            lg={6}
             sm={6}
             xl={3}
             xs={12}
@@ -55,21 +53,12 @@ const Dashboard = () => {
           </Grid>
           <Grid
             item
-            lg={3}
+            lg={6}
             sm={6}
             xl={3}
             xs={12}
           >
-            <TasksProgress />
-          </Grid>
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <TotalProfit />
+            <TasksProgress visits={visits}/>
           </Grid>
           <Grid
             item
@@ -87,7 +76,9 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <TrafficByDevice />
+            {visits && (
+              <TrafficByDevice visits={visits}/>
+            )}
           </Grid>
           <Grid
             item

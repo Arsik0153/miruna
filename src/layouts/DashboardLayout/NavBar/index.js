@@ -10,9 +10,7 @@ import {
   makeStyles
 } from '@material-ui/core';
 import {
-  AlertCircle as AlertCircleIcon,
   BarChart as BarChartIcon,
-  User as UserIcon,
   Users as UsersIcon
 } from 'react-feather';
 import NavItem from './NavItem';
@@ -28,16 +26,6 @@ const items = [
     icon: UsersIcon,
     title: 'Orders'
   },
-  {
-    href: '/app/account',
-    icon: UserIcon,
-    title: 'Staff'
-  },
-  {
-    href: '/404',
-    icon: AlertCircleIcon,
-    title: 'Error'
-  }
 ];
 
 const useStyles = makeStyles(() => ({

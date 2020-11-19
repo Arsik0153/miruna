@@ -32,7 +32,12 @@ const LatestOrders = ({ className, ...rest }) => {
   const [ orders, setOrders ] = useState();
 
   useEffect(() => {
-    axios.get('https://miruna.herokuapp.com/api/bookings/page/1')
+    let token = localStorage.getItem('token');
+    axios.get('https://miruna.herokuapp.com/api/bookings/page/1', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then((res) => {
         setOrders(res.data.rows);
       });
