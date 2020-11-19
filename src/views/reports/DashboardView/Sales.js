@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Bar } from 'react-chartjs-2';
@@ -12,6 +12,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -21,6 +22,9 @@ const Sales = ({ className, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
 
+  const [ days, setDays ] = useState([]);
+  const [ numbers, setNumbers ] = useState([]);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,15 +32,30 @@ const Sales = ({ className, ...rest }) => {
       navigate('/');
   }, [navigate]);
 
+  useEffect(() => {
+    axios.get('https://miruna.herokuapp.com/api/bookings/next_days')
+      .then(res => {
+        console.log(res.data.rows);
+        let thisDays = [];
+        let thisNumbers = [];
+        res.data.rows.forEach(item => {
+          thisDays.push(item.s);
+          thisNumbers.push(item.count);
+        });
+        setDays(thisDays);
+        setNumbers(thisNumbers);
+      });
+  }, []);
+
   const data = {
     datasets: [
       {
         backgroundColor: theme.palette.primary.main,
-        data: [18, 5, 19, 27, 29, 19, 20],
+        data: numbers,
         label: 'Orders'
       },
     ],
-    labels: ['1 Aug', '2 Aug', '3 Aug', '4 Aug', '5 Aug', '6 Aug']
+    labels: days
   };
 
   const options = {
